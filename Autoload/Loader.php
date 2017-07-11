@@ -1,10 +1,13 @@
 <?php
+// autoload classes as needed
 namespace Application\Autoload;
 class Loader 
 {
-    public static $dirs;
-    public static $registered;
-    public function __construct($dirs = array())
+    const UNABLE_TO_LOAD = 'Unable to load class';
+    // array of directories
+    public static $dirs = array();
+    public static $registered = 0;
+    public function __construct(array $dirs = array())
     {
         self::init($dirs);
     }
@@ -20,7 +23,7 @@ class Loader
     
     public static function autoLoad($class){
         $success = FALSE;
-        $fn = str_replace('\\', DIRECTOY_SEPARATOR, $class)
+        $fn = str_replace('\\', DIRECTORY_SEPARATOR, $class)
                 . '.php';
         foreach(self::$dirs as $start)  {
             $file = $start . DIRECTORY_SEPARATOR . $fn;
@@ -32,13 +35,19 @@ class Loader
         if(!$success) {
             if(!self::loadFile(__DIR__
                     . DIRECTORY_SEPARATOR . $fn)) {
-                throw new Exception(
+                throw new \Exception(
                         self::UNABLE_TO_LOAD . ' ' . $class);
             }
         }
         return $success;
     }
     
+    /** 
+     * Adds a directory to the list of supported directories
+     * Also registers "autoload" as an autoloading method
+     * 
+     * @param array | string $dirs
+     */
     public static function addDirs($dirs)
     {
         if (is_array($dirs)) {
