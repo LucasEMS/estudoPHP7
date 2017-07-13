@@ -41,6 +41,7 @@ class Hoover
                 }
             }
         }
+        return $result;
     }
     
     public function getContent($url)
