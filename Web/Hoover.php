@@ -1,8 +1,31 @@
 <?php
+// vacuuming a website
 namespace Application\Web;
+
+use DOMDocument;
+
+/*
+ * This app scans a website $url for an HTML tag $tag
+ * Returns a multi-dimensional array of value for these tags
+ * -- The array key = the line number where found
+ * -- The value = an associative array
+ * ---- Key/value pairs where key = the attribute
+ * ---- The key "content" = what's between the open and close tags
+ */
+
 class Hoover 
 {
+    // contents of website
     public $content = '';
+    
+   /**
+    * Returns an array of values for $tag from $url
+    * Tags with content == <tag>content</tag>
+    * 
+    * @param string $url = website to scan
+    * @param string $tag = tag to extract
+    * @return array $result
+    */
     public function getTags($url, $tag)
     {
         $count      = 0;
@@ -13,8 +36,7 @@ class Hoover
             $result[$count]['value'] = trim(
                     preg_replace('/\s+/', ' ', $node->nodeValue));
             if ($node->hasAttributes()) {
-                foreach ($node->attributes as $name => $attr)
-                {
+                foreach ($node->attributes as $name => $attr) {
                     $result[$count]['attributes'][$name] =
                             $attr->value;
                 }
@@ -24,6 +46,14 @@ class Hoover
         return $result;
     }
     
+    /**
+     * Returns an array of values for $atrr from $url
+     * 
+     * @param string $url       = website to scan
+     * @param string $attr      = attribute to extract
+     * @param string $domain    = [optional] DNS domain to include in return array
+     * @return array $result
+     */
     public function getAttribute($url, $attr, $domain = NULL)
     {
         $result     = array();
@@ -44,6 +74,12 @@ class Hoover
         return $result;
     }
     
+    /**
+     * Populates $contents from $url
+     * 
+     * @param string $url = website to scan
+     * @return DOMDocument $content
+     */
     public function getContent($url)
     {
         if(!$this->content) {
