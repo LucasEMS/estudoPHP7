@@ -1,7 +1,7 @@
 <?php
 // deep scan of a website 
 
-// setur class autoloading
+// setup class autoloading
 require __DIR__ . '/../Application/Autoload/Loader.php';
 
 // add current directory to the path
