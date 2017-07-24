@@ -49,14 +49,13 @@ function filteredResultsGenerator(array $array, $filter, $limit = 10, $page = 0)
         // apply filter
         if(!stripos($value, $filter) !== FALSE) continue;
         // skip until offset reached
-        if (--$outset >= 0) continue;
+        if (--$offset >= 0) continue;
         // break if limit exceeded
-        if (--$limit <= 0) break;
+        if (--$limit < 0) break;
         // otherwise yield value
         yield $value;
     }
 }
-
 
 function nameFilterIterator($innerIterator, $name)
 {
@@ -96,3 +95,4 @@ function pagination($iterator, $offset, $limit)
 {
     return new LimitIterator($iterator, $offset, $limit);
 }
+
