@@ -81,7 +81,7 @@ function fetchCountryName($sql, $connection)
     return $iterator;
 }
 
-function fechAllAssoc($sql, $connection)
+function fetchAllAssoc($sql, $connection)
 {
     $iterator = new ArrayIterator();
     $stmt = $connection->pdo->query($sql);
