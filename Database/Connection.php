@@ -37,4 +37,16 @@ class Connection
             error_log($e->getMessage());
         }
     }
+    
+    public static function factory(
+            $driver, $dbname, $host, $user, $pwd, array $options = [])
+    {
+        // build DSN
+        $dsn = sprintf('%s:dbname=%s;host=%s', $driver, $dbname, $host);
+        try {
+            return new PDO($dsn, $user, $pwd, $options);
+        } catch (PDOException $e) {
+            error_log($e->getMessage);
+        }
+    }
 }
