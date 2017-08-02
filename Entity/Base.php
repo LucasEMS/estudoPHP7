@@ -49,7 +49,7 @@ class Base
         $data = array();
         foreach ($this->mapping as $dbColumn => $propertyName) {
             $method = 'get' . ucfirst($propertyName);
-            $data[$dbColumn] = $this->method() ?? NULL;
+            $data[$dbColumn] = $this->$method() ?? NULL;
         }
         return $data;
     }

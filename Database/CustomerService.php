@@ -9,6 +9,10 @@ class CustomerService
 {
     protected $connection;
             
+    /**
+     * 
+     * @param \Application\Database\Connection $connection
+     */
     public function __construct(Connection $connection) 
     {
         $this->connection = $connection;
@@ -20,6 +24,21 @@ class CustomerService
                 ->prepare(Finder::select('customer')
                 ->where('id = :id')::getSql());
         $stmt->execute(['id' => (int) $id]);
+        // APPROACH #1
+        // the danger of directly creating the class is that properties are injected BEFORE __construct()!!!
+        // see comment by rasmus at mindplay dot dk at http://php.net/manual/en/pdostatement.fetchobject.php
+        // $stmt->fetchObject('Application\Entity\Customer');
+
+        // APPROACH #2
+        // allows the constructor to run ... but fetch() is unable to overwrite protected properties.
+        // for this approach to work all properties in the entity would have to be defined as public
+        // $stmt->setFetchMode(PDO::FETCH_INTO, new Customer());
+        // return $stmt->fetch();
+
+        // APPROACH #3
+        // although slightly more costly in terms of performance, allows the constructor ti run
+        // and preserves protected status of properties
+
         return Customer::arrayToEntity(
                 $stmt->fetch(PDO::FETCH_ASSOC)
                 , new Customer());
@@ -43,7 +62,7 @@ class CustomerService
                 ->where('email = :email')::getSql());
         $stmt->execute(['email' => $email]);
         return Customer::arrayToEntity(
-                $stmt->fetch(PDO::FECTH_ASSOC), new Customer());
+                $stmt->fetch(PDO::FETCH_ASSOC), new Customer());
     }
     
     public function save(Customer $cust)
@@ -59,9 +78,10 @@ class CustomerService
     protected function doUpdate($cust)
     {
         // get properties in the form of an array
-        $value = $cust->entityToArray();
+        $values = $cust->entityToArray();
         // build the SQL statement
         $update = 'UPDATE ' . $cust::TABLE_NAME;
+        $where = ' WHERE id = ' . $cust->getId();
         // unset ID as we want do not want this to be updated
         unset($values['id']);
         return $this->flush($update, $values, $where);
@@ -69,11 +89,16 @@ class CustomerService
     
     protected function doInsert($cust)
     {
+        // get properties in the form of an array
         $values = $cust->entityToArray();
+        // save the email address for later lookup
         $email  = $cust->getEmail();
+        // unset ID as we want this to be auto-generated
         unset($values['id']);
+        // perform insert
         $insert = 'INSERT INTO ' . $cust::TABLE_NAME . ' ';
         if ($this->flush($insert, $values)) {
+            // lookup new customer
             return $this->fetchByEmail($email);
         } else {
             return FALSE;
@@ -88,6 +113,7 @@ class CustomerService
         }
         // get rid of trailing
         $sql     = substr($sql, 0, -1) . $where;
+
         $success = FALSE;
         try {
             $stmt = $this->connection->pdo->prepare($sql);
@@ -108,7 +134,7 @@ class CustomerService
     public function remove(Customer $cust)
     {
         $sql =  'DELETE FROM ' . $cust::TABLE_NAME . ' WHERE id = :id';
-        $stmt = $this->connection->pdo->prepate($sql);
+        $stmt = $this->connection->pdo->prepare($sql);
         $stmt->execute(['id' => $cust->getId()]);
         return ($this->fetchById($cust->getId())) ? FALSE : TRUE;
     }

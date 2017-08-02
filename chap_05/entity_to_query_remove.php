@@ -1,7 +1,7 @@
 <?php
-// using Application\Entity\Customer to insert/update
+// ties RDBMS  query to Application\Entity\Customer
 
-define('DB_CONFIG_FILE', '/../data/config/db.config.php');
+define('DB_CONFIG_FILE' , '/../data/config/db.config.php');
 
 // setup class autoloading
 require __DIR__ . '/../../Application/Autoload/Loader.php';
@@ -9,13 +9,14 @@ require __DIR__ . '/../../Application/Autoload/Loader.php';
 // add current directory to the path
 Application\Autoload\Loader::init(__DIR__ . '/../..');
 
-// classes to use
+// class to use
 use Application\Entity\Customer;
 use Application\Database\Connection;
 use Application\Database\CustomerService;
 
 // get service instance
-$service = new customerservice(new Connection(include __DIR__ . DB_CONFIG_FILE));
+$service = new CustomerService(new Connection(
+        include __DIR__ . DB_CONFIG_FILE));
 
 // sample data
 $data = [
@@ -32,17 +33,13 @@ $data = [
 ];
 
 // create new Customer
-$cust = Customer::arrayToEntity($data, new Customer());
+$cust1 = Customer::arrayToEntity($data, new Customer());
+$cust2 = $service->save($cust1);
 
-// perform INSERT
-echo "\nCustomer ID BEFONE Insert: {$cust->getId()}\n";
-$cust = $service->save($cust);
-echo "Customer Balance AFTER Update: {$cust->getBalance()}\n";
-var_dump($cust);
+echo "\nCustomer ID AFTER Insert: {$cust2->getId()}\n";
 
-// perform UPDATE
-echo "Customer Balance BEFORE Update: {$cust->getBalance()}\n";
-$cust->setBalance(999.99);
-$service->save($cust);
-echo "Customer Balance AFTER Update: {$cust->getBalance()}\n";
-var_dump($cust);
+// now remove this customer
+echo ($service->remove($cust2)) ? "Customer {$cust2->getId()} REMOVED\n"
+: "Customer {$cust2->getId()} NOT REMOVED\n";
+    
+    

@@ -1,8 +1,15 @@
 <?php
+// ties RDBMS query to Application\Entity\Customer
 
 define('DB_CONFIG_FILE', '/../data/config/db.config.php');
+
+// setup class autoloading
 require __DIR__ . '/../../Application/Autoload/Loader.php';
+
+// add current directory to the path
 Application\Autoload\Loader::init(__DIR__ . '/../..');
+
+// classes to use
 use Application\Database\Connection;
 use Application\Database\CustomerService;
 
