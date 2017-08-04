@@ -1,6 +1,8 @@
 <?php
 namespace Application\Form;
 
+use Application\Form\Element\Form;
+
 class Factory
 {
     protected $elements;
@@ -75,7 +77,7 @@ class Factory
         $formPattern = $form->getWrapperPattern(
                 $formConfig['form_wrapper']);
         if (isset($formConfig['form_tag_inside_wrapper'])
-                && !formConfig['form_tag_inside_wrapper']) {
+                && !$formConfig['form_tag_inside_wrapper']) {
             $formPattern = '%s' . $formPattern . '%s';
             return sprintf($formPattern, $formTag->getInputOnly(), $contents,
                     $formTag->closeTag());

@@ -1,5 +1,7 @@
 <?php
-namespace Application\From\Element;
+namespace Application\Form\Element;
+
+use Application\Form\Generic;
 
 class Form extends Generic 
 {

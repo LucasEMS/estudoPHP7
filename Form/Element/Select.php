@@ -31,7 +31,7 @@ class Select extends Generic
     
     protected function getSelect()
     {
-        $this->pattern = '<select name="%s" %s>' . PHP_EOL;
+        $this->pattern = '<select name="%s" %s> ' . PHP_EOL;
         return sprintf($this->pattern, $this->name, $this->getAttribs());
     }
     

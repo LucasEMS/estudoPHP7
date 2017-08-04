@@ -1,12 +1,13 @@
 <?php
+// uses Application\Form\Factory
 
 // setup class autoloading
 require __DIR__ . '/../../Application/Autoload/Loader.php';
 
-// add current directory ot the path
+// add current directory to the path
 Application\Autoload\Loader::init(__DIR__ . '/../..');
 
-// anchor Generic and Select element classes
+// anchor Generic and Factory classes
 use Application\Form\Generic;
 use Application\Form\Factory;
 
@@ -25,16 +26,19 @@ $statusList = [
 	'A' => 'Approved'
 ];
 
+// get status from $_POST if any
 $email      = $_POST['email']   ?? '';
 $checked0   = $_POST['status0'] ?? 'U';
 $checked1   = $_POST['status1'] ?? 'U';
 $checked2   = $_POST['status2'] ?? ['U'];
 $checked3   = $_POST['status3'] ?? ['U'];
 
+
+// overall form config
 $formConfig = [
     'name'          => 'status_form',
     'attributes'    => ['id' => 'statusForm', 'method' => 'post',
-                    'action' => 'form_factoty.php'],
+                    'action' => 'form_factory.php'],
     'row_wrapper'   => ['type' => 'tr', 'class' => 'row'],
     'form_wrapper'  => ['type' => 'table', 'class' => 'table',
                         'id' => 'statusTable', 'class' => 'display', 
@@ -42,6 +46,7 @@ $formConfig = [
     'form_tag_inside_wrapper' => FALSE,
 ];
 
+// define elements
 $config = [
     'email' => [
         'class'     => 'Application\Form\Generic',
@@ -73,7 +78,7 @@ $config = [
 		'label'		=> 'Status 1',
 		'wrappers'	=> $wrappers,
 		'attributes'=> ['id' =>'status1','value'=>$checked1],
-		'options'   => [$statusList, $checked1],
+		'options'   => [$statusList, $checked1, '', ''],
 	],
 	'status2' => [
 		'class'		=> 'Application\Form\Element\Select',
@@ -81,7 +86,7 @@ $config = [
 		'label'		=> 'Status 2',
 		'wrappers'	=> $wrappers,
 		'attributes'=> ['id'=>'status2','multiple'=>'','size'=>'4','value'=>$checked2],
-		'options'   => [$statusList, $checked2],
+		'options'   => [$statusList, $checked2, '', ''],
 	],
 	'status3' => [
 		'class'		=> 'Application\Form\Element\CheckBox',

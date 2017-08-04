@@ -105,10 +105,11 @@ class Generic
         foreach ($this->attributes as $key => $value) {
             $key = strtolower($key);
             if ($value) {
-                if ($key == $value) {
+                if ($key == 'value') {
                     if (is_array($value)) {
+                        print_r($value);
                         foreach ($value as $k => $i)
-                            $value[$k] = htmlspecialchars($value);
+                            $value[$k] = htmlspecialchars($i);
                     } else {
                         $value = htmlspecialchars($value);
                     }
