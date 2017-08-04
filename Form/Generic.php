@@ -25,7 +25,7 @@ class Generic
     protected $errors = array();
     protected $wrappers;
     protected $attributes; // HTML form attributes
-    protected $pattern = '<input type="%s" name="%s"';
+    protected $pattern = '<input type="%s" name="%s" %s>';
     
     /**
      * Creates generic element
