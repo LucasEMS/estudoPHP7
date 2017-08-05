@@ -24,7 +24,7 @@ class Result
     
     public function mergeMessages(Result $result)
     {
-        if (isset($result->messages) && is_array($result->messafes)) {
+        if (isset($result->messages) && is_array($result->messages)) {
             $this->messages = array_merge($this->messages, $result->messages);
         }
     }
