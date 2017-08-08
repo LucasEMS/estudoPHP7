@@ -1,11 +1,80 @@
 <?php
 namespace Application\Form;
 
+use RuntimerException;
+use Application\Filter\ { Filter, Validator };
 use Application\Form\Element\Form;
 
 class Factory
 {
+    
+    const DATA_NOT_FOUND = 'Data not found. Run setData()';
+    const FILTER_NOT_FOUND = 'Filter not found. Run setFilter()';
+    const VALIDATOR_NOT_FOUND = 'Validator not found. Run setValidator()';
+    
     protected $elements;
+    protected $filter;
+    protected $validator;
+    protected $data;
+    
+    public function setFilter(Filter $filter)
+    {
+        $this->filter = $filter;
+    }
+
+    public function setValidator(Validator $validator)
+    {
+        $this->validator = $validator;
+    }
+
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+    
+    public function validate()
+    {
+        if (!$this->data) 
+            throw new RuntimeException(self::DATA_NOT_FOUND);
+            
+        if (!$this->validator) 
+            throw new RuntimeException(self::VALIDATOR_NOT_FOUND);
+        
+        // perform validation
+        $valid = $this->validator->process($this->data);
+
+        // tie validation messages into form elements
+        foreach ($this->elements as $element) {
+            if (isset($this->validator->getResults()[$element->getName()])) {
+                $element->setErrors($this->validator->getResults()[$element->getName()]->messages);
+            }
+        }
+        return $valid;
+    }
+    
+    public function filter() 
+    {
+        if (!$this->data)
+            throw new RuntimeException(self::DATA_NOT_FOUND);
+
+        if (!$this->filter)
+            throw new RuntimeException(self::FILTER_NOT_FOUND);
+        
+        $this->filter->process($this->data);
+        // apply filtered data to form elements
+        foreach ($this->filter->getResults() as $key => $result) {
+            if (isset($this->elements[$key])) {
+                $this->elements[$key]->setSingleAttribute('value', $result->item);
+                if (isset($result->messages) && count($result->messages)) {
+                    foreach ($result->messages as $message) {
+                        $this->elements[$key]->addSingleError($message);
+                    }
+                }
+            }
+        }
+
+    }
+
     public function getElements()
     {
         return $this->elements;
