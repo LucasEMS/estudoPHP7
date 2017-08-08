@@ -99,6 +99,7 @@ abstract class AbstractFilter
                 }
             }
         }
+        return $output;
     }
     
     public function setMissingMessage($message)
