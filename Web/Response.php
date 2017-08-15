@@ -1,18 +1,30 @@
 <?php
 namespace Application\Web;
 
+/**
+ * Generic class which encapsilates an HTTP request
+ * You can use this class to either create requests to send to a web
+ * service, ot encapsilate a request received via PHP
+ */
 class Response extends AbstractHttp
 {
+    protected $status;
+    /**
+     * Builds a response object
+     * If incoming params are NULL, values default to $_SERVER
+     * @param Request $request
+     */
     public function __construct(Request $request = NULL, 
             $status = NULL, $contentType = NULL)
     {
         if ($request) {
             $this->uri = $request->getUri();
             $this->data = $request->getData();
-            $this->method = $request->get->getMethod();
+            $this->method = $request->getMethod();
             $this->cookies = $request->getCookies();
             $this->setTransport();
         }
+        // process headers
         $this->processHeaders($contentType);
         if ($status) {
             $this->setStatus($status);

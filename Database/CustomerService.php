@@ -65,6 +65,14 @@ class CustomerService
                 $stmt->fetch(PDO::FETCH_ASSOC), new Customer());
     }
     
+    public function fetchAll($limit = 20, $offset = 0)
+    {
+        $stmt = $this->connection->pdo->prepare(
+                Finder::select('customer')->limit($limit)->offset($offset)::getSql());
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) yield $row;
+    }
+    
     public function save(Customer $cust)
     {
         // check to see if customer ID > 0 and exists

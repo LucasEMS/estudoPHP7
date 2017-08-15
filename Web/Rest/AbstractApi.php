@@ -1,7 +1,16 @@
 <?php
 namespace Application\Web\Rest;
-use Applicatoin\Web\ { Request\ Response };
 
+use Application\Web\ { Request, Response };
+/**
+ * REST API Interface
+ * 
+ * get(Request $request) == get all database entries
+ * put(Request $request) == INSERT data
+ * post(Request $request) == SELECT / UPDATE  entry(ies) base on Request data
+ * params $id and $action
+ * delete(Request $request) == DELETE entry base on Request data param $id
+ */
 abstract class AbstractApi implements ApiInterface
 {
     const TOKEN_BYTE_SIZE = 16;

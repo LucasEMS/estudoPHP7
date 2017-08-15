@@ -5,6 +5,12 @@ use Application\Web\ { Request, Response, Received };
 use Application\Entity\Customer;
 use Application\Database\ { Connection, CustomerService };
 
+/**
+ * REST API
+ * 
+ * All output is JSON
+ * All data is expected to be in JSON format
+ */
 class CustomerApi extends AbstractApi 
 {
     const ERROR = 'ERROR';
@@ -45,7 +51,6 @@ class CustomerApi extends AbstractApi
                 $result[] = $row;
             }
         }
-        
         if ($result) {
             $response->setData($result);
             $response->setStatus(Request::STATUS_200);
@@ -66,12 +71,47 @@ class CustomerApi extends AbstractApi
             $response->setStatus(Request::STATUS_200);
         } else {
             $response->setData([self::ERROR]);
-            $response->setStatus(Request::STATUS__500);
+            $response->setStatus(Request::STATUS_500);
         }
     }
-    
     public function post(Request $request, Response $response)
     {
-     
+        $id = $request->getDataByKey(self::ID_FIELD) ?? 0;
+        $reqData = $request->getData();
+        $custData = $this->service->fetchById($id)->entityToArray();
+        $updateData = array_merge($custData, $reqData);
+        $updateCust = Customer::arrayToEntity($updateData,
+                new Customer());
+        if ($this->service->save($updateCust)) {
+            $response->setData(['success' => self::SUCCESS_UPDATE,
+                'id' => $updateCust->getId()]);
+            $response->setStatus(Request::STATUS_200);
+        } else {
+            $response->setData([self::ERROR]);
+            $response->setStatus(Request::STATUS_500);
+        }
+    }
+    public function delete(Request $request, Response $response)
+    {
+        $id = $request->getDataByKey(self::ID_FIELD) ?? 0;
+        $cust = $this->service->fetchById($id);
+        if ($cust && $this->service->remove($cust)) {
+            $response->setData(['success' => self::SECCESS_DELETE, 
+                'id' => $id]);
+            $response->setStatus(Request::STATUS_200);  
+        } else {
+            $response->setData([self::ERROR_NOT_FOUND]);
+            $response->setStatus(Request::STATUS_500);
+        }
+    }
+    public function authenticate(Request $request) 
+    {
+        $authToken = $request->getDataByKey(self::TOKEN_FIELD)
+                ?? FALSE;
+        if (in_array($authToken, $this->registeredKeys, TRUE)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 }
