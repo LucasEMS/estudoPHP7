@@ -27,6 +27,11 @@ class Calendar
         $this->locale = $locale;
     }
     
+    public function addEvent(Event $event)
+    {
+        $this->events[$event->id] = $event;
+    }
+    
     protected function getDateFormatter()
     {
         if (!$this->dateFormatter) {
@@ -35,6 +40,7 @@ class Calendar
         }
         return $this->dateFormatter;
     }
+    
     
     public function buildMonthArray($year, $month, $timeZone = NULL)
     {
@@ -99,6 +105,7 @@ class Calendar
         return $dayObj;
     }
     
+    
     protected function getDay($type, $cal)
     {
         $formatter = $this->getDateFormatter();
@@ -120,14 +127,21 @@ class Calendar
         return $output;
     }
     
-    protected function getWeekDaysRow($week)
+    protected function getWeekDaysRow($type, $week)
     {
         $output = '<tr style="height:' . $this->height . ';">';
         $width  = (int) (100/7);
         foreach ($week as $day) {
-                $output .= '<td style="vertical-align:top;"'
-                        . ' width="' . $width . '%">' 
-                        . $day() . '</td>';
+            $events = '';
+            if ($day->events) {
+                foreach ($day->events as $single) {
+                    $events .= '<br>' . $single->title;
+                        if ($type == self::DAY_FULL) {
+                            $events .= '<br><i>' . $single->description . '</i>';
+                        }
+                }
+            }
+            $output .= '<td style="vertical-align:top;" width="' . $width . '%">' . $day() . $events . '</td>';
         }
         $output .= '</tr>' . PHP_EOL;
         return $output;
@@ -165,7 +179,7 @@ class Calendar
                     $header .= $this->getWeekHeaderRow(
                         $dayType, $cal, $year, $month, $week);
             }
-            $body .= $this->getWeekDaysRow($week);
+            $body .= $this->getWeekDaysRow($dayType,$week);
         }
         $html .= '<table>' . PHP_EOL;
         $html .= $header;
