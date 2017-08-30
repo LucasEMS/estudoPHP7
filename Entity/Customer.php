@@ -29,9 +29,20 @@ class Customer extends Base
         'level'           => 'level'
     ];
     
+    public function setPurchases(Closure $purchaseLookup)
+    {
+        $this->purchases = $purchaseLookup;
+    }
+    
     public function addPurchase($purchase)
     {
         $this->purchases[] = $purchase;
+    }
+    
+    // added to implement object relational mapping
+    public function addPurchaseLookup($purchId, $function)
+    {
+            $this->purchases[$purchId] = $function;
     }
     
     public function getPurchases()

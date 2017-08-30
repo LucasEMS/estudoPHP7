@@ -13,7 +13,7 @@ class Purchase extends Base
     
     protected $product = NULL;
     
-    protected $mappign = [
+    protected $mapping = [
         'id'            => 'id',
         'transaction'   => 'transaction',
         'date'          => 'date',
