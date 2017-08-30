@@ -13,6 +13,9 @@ class Customer extends Base
     protected $confirmCode = '';
     protected $profileId = 0;
     protected $level = '';
+    
+    protected $purchases = array();
+    
     protected $mapping = [
         'id'              => 'id',
         'name'            => 'name',
@@ -25,6 +28,16 @@ class Customer extends Base
         'profile_id'      => 'profileId',
         'level'           => 'level'
     ];
+    
+    public function addPurchase($purchase)
+    {
+        $this->purchases[] = $purchase;
+    }
+    
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
  
     public function getName() : string
     {
@@ -98,5 +111,7 @@ class Customer extends Base
     {
         $this->level = $level;
     }
+    
+    
 }
     
