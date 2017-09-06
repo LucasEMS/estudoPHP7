@@ -48,7 +48,7 @@ class Phrase
         $max = strlen($this->string) - 1;
         for ($x = 0; $x < $this->length; $x++) {
             $phrase .= substr(
-                    $this->string, random_init(0, $max), 1);
+                    $this->string, random_int(0, $max), 1);
         }
         return $phrase;
     }

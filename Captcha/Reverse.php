@@ -7,7 +7,7 @@ class Reverse implements CaptchaInterface
     const DEFAULT_LENGTH = 6;
     
     protected $phrase;
-    protected $label = DEFAULT_LABEL;
+    protected $label = self::DEFAULT_LABEL;
     
     public function __construct(
             $label = self::DEFAULT_LABEL,
