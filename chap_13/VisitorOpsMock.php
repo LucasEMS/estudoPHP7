@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/VisitorOps.php';
 
-class VsitorOpsMock extends VisitorOps
+class VisitorOpsMock extends VisitorOps
 {
     protected $testData;
     
@@ -50,5 +50,22 @@ class VsitorOpsMock extends VisitorOps
         }
     }
     
+    public function addVisitor($data)
+    {
+        $sql = 'INSERT INTO ' . self::TABLE_NAME;
+        $sql .= ' (' . implode(',', array_keys($data)) . ') ';
+        $sql .= ' VALUES ';
+        $sql .= ' ( :' . implode(',:', array_keys($data)) . ') ';
+        if (!empty($data['id'])) {
+            $id = $data['id'];
+        } else {
+            $keys = array_keys($this->testData);
+            sort($keys);
+            $id = end($keys) + 1;
+            $data['id'] = $id;
+        }
+        $this->testData[$id] = $data;
+        return 1;
+    }
     
 }

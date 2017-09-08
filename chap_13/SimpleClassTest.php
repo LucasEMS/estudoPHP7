@@ -17,12 +17,25 @@ class SimpleClassTest extends TestCase{
     
     public function testAdd()
     {
-        $this->assertEqual(2, $this->demo->add(1,1));
+        $this->assertEquals(2, $this->demo->add(1,1));
     }
     
     public function testSub()
     {
-        $this->assertEqual(0, $this->demo->sub(1, 1));
+        $this->assertEquals(0, $this->demo->sub(1, 1));
     }
-
+    
+    public function testDiv()
+    {
+        $this->assertEquals(2, $this->demo->div(4, 2));
+        $this->assertEquals(0, $this->demo->div(4, 0));
+    }
+    
+    public function testTable()
+    {
+        $a = [range('A', 'C'), range('D', 'F'), range('G', 'I')];
+        $table = $this->demo->table($a);
+        $this->assertRegExp('!^<table>.+</table>$!', $table);
+        $this->assertRegExp('!<td>B</td>!', $table);
+    }
 }

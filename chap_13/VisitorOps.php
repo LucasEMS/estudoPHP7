@@ -46,7 +46,7 @@ class VisitorOps
     public function addVisitor($data)
     {
         $sql = 'INSERT INTO ' . self::TABLE_NAME;
-        $sql .= ' (' . implde(',', array_keys($data)) . ') ';
+        $sql .= ' (' . implode(',', array_keys($data)) . ') ';
         $sql .= ' VALUES ';
         $sql .= ' ( :' . implode(',:', array_keys($data)) . ') ';
         $this->runSql($sql, $data);

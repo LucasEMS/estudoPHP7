@@ -10,18 +10,23 @@ class SimpleTest extends TestCase
     {
         $this->assertEquals(2, add(1, 1));
         $this->assertNotEquals(3, add(1, 1));
+        $this->assertEquals(0, add());
     }
     
-    public function table(array $a)
+    public function testSub()
     {
-        $table = '<table>';
-        foreach ($a as $row) {
-            $table .= '<tr><td>';
-            $table .= implode('</td><td>', $row);
-            $table .= '</td><tr>';
-        }
-        $table .= '</table>';
-        return $table;
+        $this->assertEquals(0, sub(1, 1));
+    }
+    
+    public function testMult()
+    {
+        $this->assertEquals(4, mult(2,2));
+    }
+    
+    public function testDiv()
+    {
+        $this->assertEquals(2, div(4, 2));
+        $this->assertEquals(0, div(4, 0));
     }
     
     public function testTable()

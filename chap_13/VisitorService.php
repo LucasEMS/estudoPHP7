@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/VisitorOps.php';
-require_once __DIR__ . '/../../Application/Database/Connectio.php';
+require_once __DIR__ . '/../../Application/Database/Connection.php';
 
 use Application\Database\Connection;
 
